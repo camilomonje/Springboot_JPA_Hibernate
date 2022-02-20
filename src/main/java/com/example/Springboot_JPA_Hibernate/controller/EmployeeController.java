@@ -38,7 +38,7 @@ public class EmployeeController {
 
     //READ BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@RequestParam("id") long id){
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") long id){
         Optional<Employee> employee = employeeJpaRepository.findById(id);
         if (employee.isPresent()){
             return new ResponseEntity<>(employee.get(), HttpStatus.OK);
@@ -46,17 +46,57 @@ public class EmployeeController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    //Metodo para agregar un empleado
+    //CREATE
     @PostMapping("/post")
     public ResponseEntity<Employee> createNewEmployee(@RequestBody Employee employee){
         try{
             System.out.println(employee);
-            Employee emplo = employeeJpaRepository.save(new Employee(employee.getFirstName(),
+            Employee _employee = employeeJpaRepository.save(new Employee(employee.getFirstName(),
                     employee.getLastName(), employee.getEmployeeId(), employee.getRole(), employee.getProjects()));
-            return new ResponseEntity<>(emplo, HttpStatus.CREATED);
+            return new ResponseEntity<>(_employee, HttpStatus.CREATED);
         } catch (Exception e){
             System.out.println(e);
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    //UPDATE
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable("id") Long id, @RequestBody Employee employee){
+        Optional<Employee> _employee = employeeJpaRepository.findById(id);
+
+        if (_employee.isPresent()){
+            Employee employee_ = _employee.get();
+            employee_.setFirstName(employee.getFirstName());
+            employee_.setLastName(employee.getLastName());
+            employee_.setEmployeeId(employee.getEmployeeId());
+            employee_.setRole(employee.getRole());
+            employee_.setProjects(employee.getProjects());
+            return new ResponseEntity<>(employeeJpaRepository.save(employee_),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    //DELETE BY ID
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteEmployeeById(@PathVariable("id") Long id){
+        try {
+            System.out.println(id);
+            employeeJpaRepository.deleteById(id);
+            return new ResponseEntity<>("employee eliminated", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //DELETE ALL
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteEmployees(){
+        try {
+            employeeJpaRepository.deleteAll();
+            return new ResponseEntity<>("employees eliminated",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

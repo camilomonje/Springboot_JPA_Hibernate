@@ -36,11 +36,11 @@ public class RoleController {
     }
 
     //READ BY ID
-    @GetMapping("{id}")
-    public ResponseEntity<Role> getRolesById(@PathVariable("id") long id){
-        Optional<Role> roleData = roleJpaRepository.findById(id);
-        if (roleData.isPresent()) {
-            return new ResponseEntity<>(roleData.get(), HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<Role> getRolesById(@PathVariable("id") Long id){
+        Optional<Role> role = roleJpaRepository.findById(id);
+        if (role.isPresent()) {
+            return new ResponseEntity<>(role.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -50,8 +50,8 @@ public class RoleController {
     @PostMapping("/post")
     public ResponseEntity<Role> addNewProject(@RequestBody Role role){
         try{
-            Role role1 = roleJpaRepository.save(new Role(role.getName()));
-            return new ResponseEntity<>(role1, HttpStatus.CREATED);
+            Role _role = roleJpaRepository.save(new Role(role.getName()));
+            return new ResponseEntity<>(_role, HttpStatus.CREATED);
         } catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
@@ -60,10 +60,10 @@ public class RoleController {
     //UPDATE
     @PutMapping("/update/{id}")
     public ResponseEntity<Role> updateRole(@PathVariable("id") long id, @RequestBody Role role) {
-        Optional<Role> upRole = roleJpaRepository.findById(id);
+        Optional<Role> _role = roleJpaRepository.findById(id);
 
-        if (upRole.isPresent()) {
-            Role role_ = upRole.get();
+        if (_role.isPresent()) {
+            Role role_ = _role.get();
             role_.setName(role.getName());
             return new ResponseEntity<>(roleJpaRepository.save(role_), HttpStatus.OK);
         } else {
@@ -73,12 +73,23 @@ public class RoleController {
 
     //DELETE BY ID
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteRole(@PathVariable("id") long id) {
+    public ResponseEntity<String> deleteRoleById(@PathVariable("id") long id) {
         try {
             roleJpaRepository.deleteById(id);
             return new ResponseEntity<>("Role delete",HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    //DELETE ALL
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteRoles(){
+        try {
+            roleJpaRepository.deleteAll();
+            return new ResponseEntity<>("Roles eliminated",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -36,9 +36,9 @@ public class ProjectContoller {
     //READ BY ID
     @GetMapping("{id}")
     public ResponseEntity<Project> getProjectsById(@PathVariable("id") long id){
-        Optional<Project> projectData = projectJpaRepository.findById(id);
-        if (projectData.isPresent()) {
-            return new ResponseEntity<>(projectData.get(), HttpStatus.OK);
+        Optional<Project> _project = projectJpaRepository.findById(id);
+        if (_project.isPresent()) {
+            return new ResponseEntity<>(_project.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -48,8 +48,8 @@ public class ProjectContoller {
     @PostMapping("/post")
     public ResponseEntity<Project> addNewProject(@RequestBody Project project){
         try{
-            Project projectito = projectJpaRepository.save(new Project(project.getName()));
-            return new ResponseEntity<>(projectito, HttpStatus.CREATED);
+            Project _project = projectJpaRepository.save(new Project(project.getName()));
+            return new ResponseEntity<>(_project, HttpStatus.CREATED);
         } catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
@@ -61,17 +61,17 @@ public class ProjectContoller {
         Optional<Project> upProject = projectJpaRepository.findById(id);
 
         if (upProject.isPresent()) {
-            Project project_ = upProject.get();
-            project_.setName(project.getName());
-            return new ResponseEntity<>(projectJpaRepository.save(project_), HttpStatus.OK);
+            Project _project = upProject.get();
+            _project.setName(project.getName());
+            return new ResponseEntity<>(projectJpaRepository.save(_project), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    //DELETE
+    //DELETE BY ID
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteProject(@PathVariable("id") long id) {
+    public ResponseEntity<String> deleteProjectById(@PathVariable("id") long id) {
         try {
             projectJpaRepository.deleteById(id);
             return new ResponseEntity<>("Project delete",HttpStatus.OK);
@@ -79,4 +79,16 @@ public class ProjectContoller {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
     }
+
+    //DELETE ALL
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteProjects(){
+        try {
+            projectJpaRepository.deleteAll();
+            return new ResponseEntity<>("projects eliminated",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
