@@ -45,13 +45,19 @@ public class EmployeeController {
     }
 
     //CREATE
-    @PostMapping
+    @PostMapping("/post")
     public ResponseEntity<Employee> createNewEmployee(@RequestBody Employee employee){
+        System.out.println(employee.getFirstName());
+        System.out.println(employee.getLastName());
+        System.out.println(employee.getEmployeeId());
+        System.out.println(employee.getRole().getName());
         try {
-            Employee _employee = employeeJpaRepository
-                    .save(new Employee(employee.getFirstName(),employee.getLastName(),employee.getEmployeeId(),employee.getRole()));
-            return new ResponseEntity<>(_employee,HttpStatus.CREATED);
+            System.out.println("intenta");
+            Employee emplo = employeeJpaRepository.save(new Employee(employee.getFirstName(),
+                    employee.getLastName(), employee.getEmployeeId(), employee.getRole(), employee.getProjects()));
+            return new ResponseEntity<>(emplo,HttpStatus.CREATED);
         }catch (Exception err){
+            System.out.println(err);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

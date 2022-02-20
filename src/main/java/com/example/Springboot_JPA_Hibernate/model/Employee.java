@@ -36,11 +36,12 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String firstName, String lastName, String employeeId, Role role) {
+    public Employee(String firstName, String lastName, String employeeId, Role role, List<Project> projects) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.employeeId = employeeId;
         this.role = role;
+        this.projects = projects;
     }
 
     public Long getId() {
