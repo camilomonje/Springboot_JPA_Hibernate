@@ -1,7 +1,10 @@
 package com.example.Springboot_JPA_Hibernate.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 public class Employee {
@@ -19,13 +22,25 @@ public class Employee {
     @Column(length = 25, nullable = false, unique = true)
     private String employeeId;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_role")
+    private Role role;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "employee_project",
+            joinColumns = { @JoinColumn(name = "employee_id") },
+            inverseJoinColumns = { @JoinColumn(name = "project_id")})
+    private List<Project> projects = new ArrayList<Project>();
+
+
     public Employee() {
     }
 
-    public Employee(String firstName, String lastName, String employeeId) {
+    public Employee(String firstName, String lastName, String employeeId, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.employeeId = employeeId;
+        this.role = role;
     }
 
     public Long getId() {
@@ -60,17 +75,41 @@ public class Employee {
         this.employeeId = employeeId;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return Objects.equals(id, employee.id);
+        if (id == null) {
+            if (employee.id != null)
+                return false;
+        }else if (!id.equals(employee.id))
+            return false;
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
     }
 
     @Override
@@ -83,4 +122,3 @@ public class Employee {
                 '}';
     }
 }
-
