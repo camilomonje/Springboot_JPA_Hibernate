@@ -95,23 +95,16 @@ public class Employee {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Employee)) return false;
         Employee employee = (Employee) o;
-        if (id == null) {
-            if (employee.id != null)
-                return false;
-        }else if (!id.equals(employee.id))
-            return false;
-        return true;
+        return getId().equals(employee.getId());
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
+        return Objects.hash(getId());
     }
+
 
     @Override
     public String toString() {
@@ -120,6 +113,8 @@ public class Employee {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", employeeId='" + employeeId + '\'' +
+                ", role=" + role +
+                ", projects=" + projects +
                 '}';
     }
 }

@@ -18,7 +18,8 @@ public class RoleController {
     @Autowired
     IRoleJpaRepository roleJpaRepository;
 
-    //Metodo get para obtener los roles
+    //CRUD
+    //READ ALL
     @GetMapping()
     public ResponseEntity<List<Role>> getRoles(){
         try {
@@ -34,7 +35,7 @@ public class RoleController {
         }
     }
 
-    //Metodo para obtener roles por id
+    //READ BY ID
     @GetMapping("{id}")
     public ResponseEntity<Role> getRolesById(@PathVariable("id") long id){
         Optional<Role> roleData = roleJpaRepository.findById(id);
@@ -45,7 +46,7 @@ public class RoleController {
         }
     }
 
-    //Metodo para agregar un rol
+    //CREATE
     @PostMapping("/post")
     public ResponseEntity<Role> addNewProject(@RequestBody Role role){
         try{
@@ -56,7 +57,7 @@ public class RoleController {
         }
     }
 
-    //Metodo para actualizar role
+    //UPDATE
     @PutMapping("/update/{id}")
     public ResponseEntity<Role> updateRole(@PathVariable("id") long id, @RequestBody Role role) {
         Optional<Role> upRole = roleJpaRepository.findById(id);
@@ -70,7 +71,7 @@ public class RoleController {
         }
     }
 
-    //Metodo para eliminar role
+    //DELETE BY ID
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteRole(@PathVariable("id") long id) {
         try {

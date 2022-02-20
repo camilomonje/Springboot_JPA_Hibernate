@@ -1,6 +1,8 @@
 package com.example.Springboot_JPA_Hibernate.controller;
 
 import com.example.Springboot_JPA_Hibernate.model.Employee;
+import com.example.Springboot_JPA_Hibernate.model.Project;
+import com.example.Springboot_JPA_Hibernate.model.Role;
 import com.example.Springboot_JPA_Hibernate.repository.IEmployeeJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,23 +46,18 @@ public class EmployeeController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    //CREATE
+    //Metodo para agregar un empleado
     @PostMapping("/post")
     public ResponseEntity<Employee> createNewEmployee(@RequestBody Employee employee){
-        System.out.println(employee.getFirstName());
-        System.out.println(employee.getLastName());
-        System.out.println(employee.getEmployeeId());
-        System.out.println(employee.getRole().getName());
-        try {
-            System.out.println("intenta");
+        try{
+            System.out.println(employee);
             Employee emplo = employeeJpaRepository.save(new Employee(employee.getFirstName(),
                     employee.getLastName(), employee.getEmployeeId(), employee.getRole(), employee.getProjects()));
-            return new ResponseEntity<>(emplo,HttpStatus.CREATED);
-        }catch (Exception err){
-            System.out.println(err);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(emplo, HttpStatus.CREATED);
+        } catch (Exception e){
+            System.out.println(e);
+            return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
     }
-
 
 }
